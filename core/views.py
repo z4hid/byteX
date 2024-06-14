@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from product.models import Product, Category
 from .forms import SignupForm
+from order.models import Order
 
 # Create your views here.
 def frontpage(request):
@@ -44,7 +45,14 @@ def shop(request):
 
 @login_required
 def myaccount(request):
-    return render(request, 'core/myaccount.html')
+    # Retrieve orders associated with the current user
+    orders = Order.objects.filter(user=request.user)
+    
+    context = {
+        'orders': orders
+    }
+    
+    return render(request, 'core/myaccount.html', context)
 
 @login_required
 def edit_myaccount(request):
