@@ -42,7 +42,7 @@
                 hx-trigger="update-menu-cart from:body"
                 hx-swap="innerHTML">
 
-                {% include 'cart/menu_cart.html' %}
+                {% include 'cart/partials/menu_cart.html' %}
             </div>
             </div>
         </div>
@@ -76,6 +76,8 @@
     </footer>
 
     <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
+    {% block scripts %}
+    {% endblock %}
     
 </body>
 

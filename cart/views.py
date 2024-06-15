@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from .cart import Cart
@@ -9,7 +10,7 @@ def add_to_cart(request, product_id):
     cart = Cart(request)
 
     cart.add(product_id)
-    return render(request, 'cart/menu_cart.html')
+    return render(request, 'cart/partials/menu_cart.html')
 
 def cart(request):
     # cart = Cart(request)
@@ -17,6 +18,9 @@ def cart(request):
     # for item in cart:
     #     print(item)
     return render(request, 'cart/cart.html')
+
+def success(request):
+    return render(request, 'cart/success.html')
 
 def update_cart(request, product_id, action):
     try:
@@ -31,24 +35,25 @@ def update_cart(request, product_id, action):
 
         product = get_object_or_404(Product, pk=product_id)
 
-        cart_item = cart.get_item(product_id)
-        if not cart_item:
-            return JsonResponse({'error': 'Cart item not found'}, status=404)
+        quantity = cart.get_item(product_id)
+        
+        if quantity:
+            quantity = quantity['quantity']
 
-        quantity = cart_item['quantity']
-
-        item = {
-            'product': {
-                'id': product.id,
-                'name': product.name,
-                'slug': product.slug,
-                'image': product.image.url,
-                'get_thumbnail': product.get_thumbnail(),
-                'price': product.price,
-            },
-            'total_price': product.price * quantity,
-            'quantity': quantity
-        }
+            item = {
+                'product': {
+                    'id': product.id,
+                    'name': product.name,
+                    'slug': product.slug,
+                    'image': product.image.url,
+                    'get_thumbnail': product.get_thumbnail(),
+                    'price': product.price,
+                },
+                'total_price': product.price * quantity,
+                'quantity': quantity
+            }
+        else:
+            item = None
 
         response = render(request, 'cart/partials/cart_item.html', {'item': item})
         response['HX-Trigger'] = 'update-menu-cart' 
@@ -62,7 +67,8 @@ def update_cart(request, product_id, action):
 
 @login_required
 def checkout(request):
-    return render(request, 'cart/checkout.html')
+    pub_key = settings.STRIPE_API_KEY_PUBLISHABLE
+    return render(request, 'cart/checkout.html', {'pub_key': pub_key})
 
 def hx_menu_cart(request):
     return render(request, 'cart/partials/menu_cart.html')

@@ -25,6 +25,15 @@ class Order(models.Model):
     paid = models.BooleanField(default=False)
     paid_amount = models.IntegerField(blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=ORDERED)
+    payment_intent = models.CharField(max_length=255, blank=True, null=True)
+    
+    class Meta:
+        ordering = ('-created_at',)
+        
+    def get_total_price(self):
+        if self.paid_amount:
+            return self.paid_amount
+        return 0
     
     
 class OrderItem(models.Model):
@@ -32,3 +41,6 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, related_name='items', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=12, decimal_places=2)
     quantity = models.IntegerField()
+    
+    def get_total_price(self):
+        return self.price
