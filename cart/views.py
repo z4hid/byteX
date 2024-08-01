@@ -6,26 +6,52 @@ from product.models import Product
 
 from django.http import JsonResponse
 
+
+# This function handles the adding of products to the cart
+# It takes in the HTTP request and the product ID as parameters
+# It initializes a new instance of the Cart class with the request object
+# It then calls the add method of the cart object, passing in the product ID
+# Finally, it renders the 'cart/partials/menu_cart.html' template and returns the response
 def add_to_cart(request, product_id):
+    # Initialize a new instance of the Cart class with the request object
     cart = Cart(request)
 
+    # Call the add method of the cart object, passing in the product ID
     cart.add(product_id)
+
+    # Render the 'cart/partials/menu_cart.html' template and return the response
     return render(request, 'cart/partials/menu_cart.html')
 
+
+# This function handles the rendering of the cart page
+# It takes in the HTTP request as a parameter
+# It simply renders the 'cart/cart.html' template and returns the response
 def cart(request):
-    # cart = Cart(request)
-    # print(cart)
-    # for item in cart:
-    #     print(item)
+    # Render the 'cart/cart.html' template and return the response
     return render(request, 'cart/cart.html')
 
+
+# This function handles the rendering of the success page after a successful purchase
+# It takes in the HTTP request as a parameter
+# It simply renders the 'cart/success.html' template and returns the response
 def success(request):
     return render(request, 'cart/success.html')
 
+
+# This function handles the updating of the cart
+# It takes in the HTTP request, the product ID, and the action as parameters
+# It initializes a new instance of the Cart class with the request object
+# It then checks the action parameter and calls the add method of the cart object accordingly
+# It retrieves the product object with the given product ID
+# It retrieves the quantity of the product in the cart
+# If the quantity is not None, it creates a dictionary with the product information and the quantity
+# Finally, it renders the 'cart/partials/cart_item.html' template with the item dictionary as context and returns the response
 def update_cart(request, product_id, action):
     try:
+        # Initialize a new instance of the Cart class with the request object
         cart = Cart(request)
-        
+
+        # Check the action parameter and call the add method of the cart object accordingly
         if action == 'increment':
             cart.add(product_id, 1, True)
         elif action == 'decrement':
@@ -33,13 +59,16 @@ def update_cart(request, product_id, action):
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
 
+        # Retrieve the product object with the given product ID
         product = get_object_or_404(Product, pk=product_id)
 
+        # Retrieve the quantity of the product in the cart
         quantity = cart.get_item(product_id)
-        
+
         if quantity:
             quantity = quantity['quantity']
 
+            # Create a dictionary with the product information and the quantity
             item = {
                 'product': {
                     'id': product.id,
@@ -55,6 +84,7 @@ def update_cart(request, product_id, action):
         else:
             item = None
 
+        # Render the 'cart/partials/cart_item.html' template with the item dictionary as context and return the response
         response = render(request, 'cart/partials/cart_item.html', {'item': item})
         response['HX-Trigger'] = 'update-menu-cart' 
         return response
@@ -65,13 +95,6 @@ def update_cart(request, product_id, action):
         return JsonResponse({'error': str(e)}, status=500)
 
 
-@login_required
-def checkout(request):
-    pub_key = settings.STRIPE_API_KEY_PUBLISHABLE
-    return render(request, 'cart/checkout.html', {'pub_key': pub_key})
-
-def hx_menu_cart(request):
-    return render(request, 'cart/partials/menu_cart.html')
-
-def hx_cart_total(request):
-    return render(request, 'cart/partials/cart_total.html')
+# This function handles the rendering of the checkout page
+# It takes in the HTTP request as a parameter
+# It retrieves
