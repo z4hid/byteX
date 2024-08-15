@@ -8,10 +8,28 @@ from order.models import Order
 
 # Create your views here.
 def frontpage(request):
+    """
+    Handles the front page view of the application.
+
+    Parameters:
+    request (HttpRequest): The current HTTP request.
+
+    Returns:
+    HttpResponse: A rendered HTML response for the front page.
+    """
     products = Product.objects.all()[0:8] # Get 8 Products from the database
     return render(request, 'core/home.html', {'products': products})
 
 def signup(request):
+    """
+    Handles the signup view of the application.
+
+    Parameters:
+    request (HttpRequest): The current HTTP request.
+
+    Returns:
+    HttpResponse: A rendered HTML response for the signup page or a redirect to the homepage upon successful signup.
+    """
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
@@ -23,6 +41,15 @@ def signup(request):
     return render(request, 'core/signup.html', {'form': form})
 
 def shop(request):
+    """
+    Handles the shop view of the application.
+
+    Parameters:
+    request (HttpRequest): The current HTTP request.
+
+    Returns:
+    HttpResponse: A rendered HTML response for the shop page.
+    """
     categories = Category.objects.all()
     products = Product.objects.all()
     active_category = request.GET.get('category', '')
@@ -45,6 +72,15 @@ def shop(request):
 
 @login_required
 def myaccount(request):
+    """
+    Handles the myaccount view of the application.
+
+    Parameters:
+    request (HttpRequest): The current HTTP request.
+
+    Returns:
+    HttpResponse: A rendered HTML response for the myaccount page.
+    """
     # Retrieve orders associated with the current user
     orders = Order.objects.filter(user=request.user)
     
@@ -56,6 +92,16 @@ def myaccount(request):
 
 @login_required
 def edit_myaccount(request):
+    """
+    Updates the user's account information if the request method is POST.
+
+    Parameters:
+    - request (HttpRequest): The current HTTP request.
+
+    Returns:
+    - HttpResponseRedirect: Redirects to the 'myaccount' page if the update is successful.
+    - HttpResponse: Renders the 'core/edit_myaccount.html' template if the request method is not POST.
+    """
     if request.method == 'POST':
         user = request.user
         user.first_name = request.POST.get('first_name')
