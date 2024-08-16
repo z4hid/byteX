@@ -9,6 +9,15 @@ from cart.cart import Cart
 from .models import Order, OrderItem
 
 def start_order(request):
+    """
+    Creates a new order based on the provided cart and payment information.
+
+    Args:
+        request: The HTTP request containing the cart and payment data.
+
+    Returns:
+        A JsonResponse containing the payment session and order details.
+    """
     cart = Cart(request)
     data = json.loads(request.body)
     total_price = 0
@@ -35,8 +44,8 @@ def start_order(request):
         payment_method_types=['card'],
         line_items=items,
         mode='payment',
-        success_url='http://127.0.0.1:8000/cart/success/',
-        cancel_url='http://127.0.0.1:8000/cart/'
+        success_url='https://consoles-ct-experiences-hang.trycloudflare.com/cart/success/',
+        cancel_url='https://consoles-ct-experiences-hang.trycloudflare.com/cart/'
     )
     payment_intent = session.payment_intent
 
