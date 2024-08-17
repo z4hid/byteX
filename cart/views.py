@@ -13,6 +13,16 @@ from django.http import JsonResponse
 # It then calls the add method of the cart object, passing in the product ID
 # Finally, it renders the 'cart/partials/menu_cart.html' template and returns the response
 def add_to_cart(request, product_id):
+    """
+    Handles the adding of products to the cart.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        product_id (int): The ID of the product to add to the cart.
+
+    Returns:
+        HttpResponse: The rendered 'cart/partials/menu_cart.html' template.
+    """
     # Initialize a new instance of the Cart class with the request object
     cart = Cart(request)
 
@@ -27,6 +37,15 @@ def add_to_cart(request, product_id):
 # It takes in the HTTP request as a parameter
 # It simply renders the 'cart/cart.html' template and returns the response
 def cart(request):
+    """
+    Handles the rendering of the cart page.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered 'cart/cart.html' template.
+    """
     # Render the 'cart/cart.html' template and return the response
     return render(request, 'cart/cart.html')
 
@@ -35,6 +54,15 @@ def cart(request):
 # It takes in the HTTP request as a parameter
 # It simply renders the 'cart/success.html' template and returns the response
 def success(request):
+    """
+    Handles the rendering of the success page after a successful purchase.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered 'cart/success.html' template.
+    """
     return render(request, 'cart/success.html')
 
 
@@ -47,6 +75,18 @@ def success(request):
 # If the quantity is not None, it creates a dictionary with the product information and the quantity
 # Finally, it renders the 'cart/partials/cart_item.html' template with the item dictionary as context and returns the response
 def update_cart(request, product_id, action):
+    """
+    Handles the updating of the cart.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        product_id (int): The ID of the product to update in the cart.
+        action (str): The action to perform on the product in the cart. Can be 'increment' or 'decrement'.
+
+    Returns:
+        HttpResponse: The rendered 'cart/partials/cart_item.html' template with the updated item dictionary as context.
+        JsonResponse: An error response if the action is invalid, the product does not exist, or an exception occurs.
+    """
     try:
         # Initialize a new instance of the Cart class with the request object
         cart = Cart(request)
