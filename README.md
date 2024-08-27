@@ -1,6 +1,6 @@
 # byTeX
 
-`byTex` is an e-commerce web application for technical products. 
+`byTex` is an custom e-commerce web application for technical products. 
 
 ## Demo
 
