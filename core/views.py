@@ -93,14 +93,20 @@ def myaccount(request):
 @login_required
 def edit_myaccount(request):
     """
-    Updates the user's account information if the request method is POST.
-
+    Updates the user's account information based on the request method.
+    
+    If the request method is POST, it retrieves and updates the user details from the form data,
+    saves them to the database, and then redirects to the 'myaccount' page.
+    
+    If the request method is not POST, it renders the 'core/edit_myaccount.html' template 
+    for user input.
+    
     Parameters:
-    - request (HttpRequest): The current HTTP request.
-
+        request (HttpRequest): The current HTTP request object containing form data if applicable.
+        
     Returns:
-    - HttpResponseRedirect: Redirects to the 'myaccount' page if the update is successful.
-    - HttpResponse: Renders the 'core/edit_myaccount.html' template if the request method is not POST.
+        HttpResponseRedirect: Redirects to the 'myaccount' page after successfully updating the account information.
+        HttpResponse: Renders the 'core/edit_myaccount.html' template for GET requests, allowing user input and validation.
     """
     if request.method == 'POST':
         user = request.user
