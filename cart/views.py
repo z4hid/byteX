@@ -138,3 +138,40 @@ def update_cart(request, product_id, action):
 # This function handles the rendering of the checkout page
 # It takes in the HTTP request as a parameter
 # It retrieves
+def checkout(request):
+    """
+    Handles the rendering of the checkout page.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered 'cart/checkout.html' template.
+    """
+    return render(request, 'cart/checkout.html')
+
+
+def hx_menu_cart(request):
+    """
+    Handles the rendering of the menu cart.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered 'cart/partials/menu_cart.html' template.
+    """
+    return render(request, 'cart/partials/menu_cart.html')
+
+
+def hx_cart_total(request):
+    """
+    Handles the rendering of the cart total.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered 'cart/partials/cart_total.html' template.
+    """
+    return render(request, 'cart/partials/cart_total.html')
